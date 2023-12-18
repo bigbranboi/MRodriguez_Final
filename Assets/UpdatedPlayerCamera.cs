@@ -27,16 +27,9 @@ public class FirstPersonController : MonoBehaviour
     public float mouseSensitivity = 2f;
     public float maxLookAngle = 50f;
 
-    // Crosshair
-    public bool lockCursor = true;
-    public bool crosshair = true;
-    public Sprite crosshairImage;
-    public Color crosshairColor = Color.white;
-
     // Internal Variables
     private float yaw = 0.0f;
     private float pitch = 0.0f;
-    private Image crosshairObject;
 
     // Movement Variables
 
@@ -48,29 +41,13 @@ public class FirstPersonController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
 
-        crosshairObject = GetComponentInChildren<Image>();
+        playerCamera = GetComponentInChildren<Camera>();
     }
 
     void Start()
     {
-        if(lockCursor)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-
-        if(crosshair)
-        {
-            crosshairObject.sprite = crosshairImage;
-            crosshairObject.color = crosshairColor;
-        }
-        else
-        {
-            crosshairObject.gameObject.SetActive(false);
-        }
-
+        Cursor.lockState = CursorLockMode.Locked;
     }
-
-    float camRotation;
 
     private void Update()
     {
@@ -94,6 +71,18 @@ public class FirstPersonController : MonoBehaviour
 
             transform.localEulerAngles = new Vector3(0, yaw, 0);
             playerCamera.transform.localEulerAngles = new Vector3(pitch, 0, 0);
+        }
+
+        //click objects
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector3 mousePosition = Input.mousePosition;
+            Ray ray = playerCamera.ScreenPointToRay(mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                // Use the hit variable to determine what was clicked on.
+                Debug.Log("click");
+            }
         }
     }
 
